@@ -1,17 +1,15 @@
 {
-  "name": "monio-api",
-  "version": "1.0.0",
-  "description": "Api for monio example",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "csv-parse": "^4.12.0",
-    "express": "^4.17.1"
-  },
-  "engines": {
-    "node": "12.x"
-  }
+	"name": "monio-demo",
+	"version": "1.0.0",
+	"description": "Demo for Monio",
+	"main": "server/index.js",
+	"scripts": {
+		"start": "node server/index.js"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"monio": "latest",
+		"csv-parse": "~5.0.4",
+		"express": "~4.17.2"
+	}
 }
