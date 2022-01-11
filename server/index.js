@@ -14,20 +14,19 @@ const app = express();
 
 fs.readFile(path.join(__dirname,"data.csv"), "utf8", (err, data) => {
 	parse(data, { columns: true }, (err,csv) => {
-		const columns = csv[0];
-		const db = csv.slice(1);
+		const db = [ ...csv ];
 
-		app.get("/api/platforms", (req,res) =>
-			["Netflix", "Prime Video", "Hulu", "Disney+"]
-		);
+		app.get("/api/platforms", (req,res) => (
+			res.json(["Netflix", "Prime Video", "Hulu", "Disney+"])
+		));
 
-		app.get("/api/rows/:id", (req,res) =>
-			res.json(db[Number(req.params.id)])
-		);
+		app.get("/api/rows/:id", (req,res) => (
+			res.json(db.filter(r => (Number(req.params.id) === Number(r.ID))))
+		));
 
-		app.get("/api/platform/:platform", (req,res) =>
-			res.json(db.filter(r => Boolean(r[req.params.platform])))
-		);
+		app.get("/api/platform/:platform", (req,res) => (
+			res.json(db.filter(r => (Number(r[req.params.platform]) === 1)))
+		));
 
 		// silence annoying browser auto-requests for favicon
 		app.get("/favicon.ico", (req,res) => {
