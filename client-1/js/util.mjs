@@ -1,3 +1,4 @@
+import { curry, isMonad, isFunction } from "monio/util";
 import Maybe from "monio/maybe";
 import Either from "monio/either";
 import IO from "monio/io";
@@ -8,20 +9,26 @@ import {
 	ifReturned
 } from "monio/io/helpers";
 
+
+const setPropC = curry(setProp,3);
+const appendElementC = curry(appendElement,2);
 export {
 	identity,
+	setPropC as setProp,
 	getElement,
 	createElement,
-	appendElement,
+	appendElementC as appendElement,
 	disableElement,
 	enableElement,
-	apiGet
+	apiGet,
+	reportError
 };
 
 
 // *********************************************
 
 function identity(v) { return v; }
+function setProp(propName,val,obj) { return IO(() => { obj[propName] = val; return obj; }); }
 function getElement(id) { return IO(({ doc }) => doc.getElementById(id)); }
 function createElement(type) { return IO(({ doc }) => doc.createElement(type)); }
 function appendElement(parentEl,childEl) { return IO(() => parentEl.appendChild(childEl)); }
@@ -38,12 +45,30 @@ function *apiGet(env,endpoint) {
 				])
 			)
 		);
+
 		return json.fold(
 			() => Either.Left("API call failed."),
-			Either.Right
+			identity
 		);
 	}
 	catch (err) {
 		return Either.Left("API call failed.");
+	}
+}
+
+function reportError(err) {
+	if (Either.Left.is(err)) {
+		console.log(
+			err.fold(identity,identity)
+		);
+	}
+	else if (isMonad(err)) {
+		console.log(err._inspect());
+	}
+	else if (isFunction(err.toString)) {
+		console.log(err.toString());
+	}
+	else {
+		console.log(err);
 	}
 }
