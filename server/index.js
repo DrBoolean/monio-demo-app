@@ -38,7 +38,7 @@ fs.readFile(path.join(__dirname,"data.csv"), "utf8", (err, data) => {
 			lastModified: false,
 			fallthrough: false,
 			setHeaders(res,path,stat) {
-				res.set("Cache-Control: no-cache, no-store");
+				res.set("Cache-Control","no-cache, no-store");
 			},
 		}));
 

@@ -1,0 +1,73 @@
+#!/usr/bin/env node
+
+var fs = require("fs");
+var path = require("path");
+var util = require("util");
+var { execFile } = require("child_process");
+
+var params = require("minimist")(process.argv.slice(2),{
+	boolean: [ "help", ],
+	string: [ "client" ],
+	alias: {
+		"client": "c",
+	},
+	default: {
+		help: false,
+		client: "./client-1",
+	},
+});
+
+var execFileAsync = util.promisify(execFile);
+
+const ROOT_DIR = path.join(__dirname,"..");
+const CLIENT_DIR = path.resolve(ROOT_DIR,params.client);
+const CLIENT_IMPORT_MAP_PATH = path.join(CLIENT_DIR,"client-import-map.json");
+const CLIENT_JS_DIR = path.join(CLIENT_DIR,"js");
+const CLIENT_JS_NIM_DIR = path.join(CLIENT_DIR,"js-nim");
+
+(async function main(){
+	if (params.help) {
+		printHelp();
+		return;
+	}
+
+	try {
+		// run import-remap CLI on the client's /js tree
+		// to remap the dependencies
+		await execFileAsync(
+			path.join(ROOT_DIR,"node_modules",".bin","import-remap"),
+			[
+				`--from=${CLIENT_JS_DIR}`,
+				`--to=${CLIENT_JS_NIM_DIR}`,
+				`--map=${CLIENT_IMPORT_MAP_PATH}`,
+				"--ignore=**/*.json",
+				"--ignore=**/monio/*",
+				"-r"
+			]
+		);
+
+		console.log(`Client build complete (${CLIENT_JS_NIM_DIR})`);
+	}
+	catch (err) {
+		showError(err);
+	}
+})();
+
+function printHelp() {
+	console.log("Build-Client usage:");
+	console.log("  build-client {OPTIONS}");
+	console.log("");
+	console.log("--help                     print this help");
+	console.log("--client={PATH}            which client path to build");
+	console.log(`                           [${ CLIENT_DIR }]`);
+	console.log("");
+}
+
+function showError(err,includeHelp = false) {
+	console.error(err.toString());
+	if (includeHelp) {
+		console.log("");
+		printHelp();
+	}
+	process.exit(1);
+}

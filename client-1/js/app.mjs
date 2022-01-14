@@ -20,7 +20,7 @@ import {
 	enableElement,
 	apiGet,
 	reportError
-} from "./util.mjs";
+} from "app-util";
 
 
 var noShowsAvailable = (

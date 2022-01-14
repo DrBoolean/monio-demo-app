@@ -24,44 +24,57 @@
 
 
 <!-------------------------------------------------------------
-NOTE: this `importmap` is not required to use Monio. It just
-makes it easier to `import` with friendly package entry points,
+This Import Map below is *not required* to use Monio; it just
+makes it easier to `import` using friendly package entry points,
 like:
 
   import Just from "monio/just";
 
-If your browser doesn't support Import Maps
-(https://caniuse.com/?search=importmap), or if you choose not
-to use them, your imports in the browser need to use the full
-paths, like:
-
-  import Just from "/js/monio/just.mjs";
-
-You'll need to adjust the `import` statements in `js/app.mjs`
-accordingly.
+Note the status of browser support for Import Maps
+(https://caniuse.com/?search=importmap). Also note that Import
+Maps currently must be specified inline in the HTML, as shown
+below:
 -->
 <script type="importmap">
 {
-  "imports": {
-    "monio": "/js/monio/index.mjs",
-    "monio/just": "/js/monio/just.mjs",
-    "monio/nothing": "/js/monio/nothing.mjs",
-    "monio/maybe": "/js/monio/maybe.mjs",
-    "monio/either": "/js/monio/either.mjs",
-    "monio/async-either": "/js/monio/async-either.mjs",
-    "monio/io": "/js/monio/io/io.mjs",
-    "monio/iox": "/js/monio/io/iox.mjs",
-    "monio/io/x": "/js/monio/io/iox.mjs",
-    "monio/io/any": "/js/monio/io/any.mjs",
-    "monio/io/all": "/js/monio/io/all.mjs",
-    "monio/io/event-stream": "/js/monio/io/event-stream.mjs",
-    "monio/io/helpers": "/js/monio/io/helpers.mjs",
-    "monio/iox/helpers": "/js/monio/io/x-helpers.mjs",
-    "monio/io/x/helpers": "/js/monio/io/x-helpers.mjs",
-    "monio/util": "/js/monio/lib/util.mjs"
-  }
+	"imports": {
+		"monio": "/js/monio/index.mjs",
+		"monio/just": "/js/monio/just.mjs",
+		"monio/nothing": "/js/monio/nothing.mjs",
+		"monio/maybe": "/js/monio/maybe.mjs",
+		"monio/either": "/js/monio/either.mjs",
+		"monio/async-either": "/js/monio/async-either.mjs",
+		"monio/io": "/js/monio/io/io.mjs",
+		"monio/iox": "/js/monio/io/iox.mjs",
+		"monio/io/x": "/js/monio/io/iox.mjs",
+		"monio/io/any": "/js/monio/io/any.mjs",
+		"monio/io/all": "/js/monio/io/all.mjs",
+		"monio/io/event-stream": "/js/monio/io/event-stream.mjs",
+		"monio/io/helpers": "/js/monio/io/helpers.mjs",
+		"monio/iox/helpers": "/js/monio/io/x-helpers.mjs",
+		"monio/io/x/helpers": "/js/monio/io/x-helpers.mjs",
+		"monio/util": "/js/monio/lib/util.mjs",
+
+		"app-util": "/js/util.mjs",
+		"/js-nim/app.mjs": "/js/app.mjs"
+	}
 }
 </script>
-<script type="module" src="js/app.mjs"></script>
+
+<!-- The following is a hack/trick to deal with the spotty
+level of browser support for Import Maps.
+
+If your browser DOES NOT support Import Maps, the client code
+will be loaded from the `/js-nim/` directory tree, in which
+all the `import` specifiers have been remapped manually with
+the Import-Remap build tool (https://github.com/getify/import-remap).
+
+If your browser DOES support Import Maps, the final line of the
+Import Map above will remap `/js-nim/app.mjs` to `/js/app.mjs`,
+which then loads the client code from the `/js/` directory tree,
+in which all the original, friendly `import` specifiers are
+automatically remapped by the browser using the above Import Map.
+-->
+<script type="module">import "/js-nim/app.mjs";</script>
 
 </html>

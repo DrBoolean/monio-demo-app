@@ -1,15 +1,19 @@
 {
-	"name": "monio-demo",
+	"name": "monio-demo-app",
 	"version": "1.0.0",
 	"description": "Demo for Monio",
 	"main": "server/index.js",
 	"scripts": {
-		"start": "node server/index.js"
+		"start": "scripts/build-client && node server/index.js"
 	},
 	"license": "MIT",
 	"dependencies": {
 		"monio": "latest",
 		"csv-parse": "~5.0.4",
 		"express": "~4.17.2"
+	},
+	"devDependencies": {
+		"import-remap": "~0.5.0",
+		"minimist": "~1.2.5"
 	}
 }
