@@ -36,7 +36,8 @@ function disableElement(el) { return IO(() => el.disabled = true); }
 function enableElement(el) { return IO(() => el.disabled = false); }
 
 function *apiGet(env,endpoint) {
-	let apiEndpointURL = `/api/${endpoint}`;
+	var apiEndpointURL = `/api/${endpoint}`;
+
 	try {
 		let res = yield fetch(apiEndpointURL);
 
@@ -50,7 +51,7 @@ function *apiGet(env,endpoint) {
 
 		return json.fold(
 			() => Either.Left(`API call failed: ${apiEndpointURL}`),
-			identity
+			res => Either.Right(res)
 		);
 	}
 	catch (err) {
