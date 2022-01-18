@@ -83,14 +83,14 @@ function *runApp(viewContext) {
 	IOx.do(changePlatform,[ IOx.onEvent(platformsEl,"change") ])
 		.run(viewContext);
 
-	// VERSION 1: listen for clicks on the search button
+	// VERSION 1 (listen for clicks on the search button)
 	//
 	// note: ditto about `yield` vs `run()`
 	IOx.doEither(doSearch,[ IOx.onEvent(searchBtn,"click") ])
 		.run(viewContext);
 
 
-	// // VERSION 2: listen for clicks on the search button
+	// // VERSION 2 (listen for clicks on the search button)
 	// //
 	// // note: ditto about `yield` vs `run()`
 	// IOx.do(doSearchAlt,[ IOx.onEvent(searchBtn,"click") ])
@@ -131,7 +131,7 @@ function *changePlatform({ searchBtn }) {
 	);
 }
 
-// VERSION 1: `doSearch(..)` invoked with `doEither(..)`;
+// VERSION 1 (`doSearch(..)` invoked with `doEither(..)`)
 // Either:Left values throw, so error handling done with
 // `try..catch` style
 function *doSearch(viewContext) {
@@ -161,7 +161,7 @@ function *doSearch(viewContext) {
 
 
 // // ---------------------------------------------------
-// // VERSION 2: `doSearchAlt(..)` invoked with `do(..)`;
+// // VERSION 2 (`doSearchAlt(..)` invoked with `do(..)`)
 // // no automatic throwing of Either:Left, so uses
 // // fold(..) for success/error handling
 // function *doSearchAlt(viewContext) {

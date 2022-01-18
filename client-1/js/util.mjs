@@ -35,6 +35,7 @@ function appendElement(parentEl,childEl) { return IO(() => parentEl.appendChild(
 function disableElement(el) { return IO(() => el.disabled = true); }
 function enableElement(el) { return IO(() => el.disabled = false); }
 
+// returns an Either
 function *apiGet(env,endpoint) {
 	var apiEndpointURL = `/api/${endpoint}`;
 
