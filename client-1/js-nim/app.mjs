@@ -51,11 +51,15 @@ function* runApp(viewContext) {
   // manually, so that we don't block waiting for
   // the first event to fire
 
-  IOx.do(changePlatform, [IOx.onEvent(platformsEl, "change")]).run(viewContext); // listen for clicks on the search button
+  IOx.do(changePlatform, [IOx.onEvent(platformsEl, "change")]).run(viewContext); // VERSION 1 (listen for clicks on the search button)
   //
   // note: ditto about `yield` vs `run()`
 
-  IOx.doEither(doSearch, [IOx.onEvent(searchBtn, "click")]).run(viewContext);
+  IOx.doEither(doSearch, [IOx.onEvent(searchBtn, "click")]).run(viewContext); // // VERSION 2 (listen for clicks on the search button)
+  // //
+  // // note: ditto about `yield` vs `run()`
+  // IOx.do(doSearchAlt,[ IOx.onEvent(searchBtn,"click") ])
+  // 	.run(viewContext);
 }
 
 function* loadPlatforms({
@@ -85,7 +89,10 @@ function* changePlatform({
   return platformNameM.fold( // platform name not selected?
   () => noShowsAvailable.chain(() => disableElement(searchBtn)), // otherwise, valid platform name selected
   () => enableElement(searchBtn));
-}
+} // VERSION 1 (`doSearch(..)` invoked with `doEither(..)`)
+// Either:Left values throw, so error handling done with
+// `try..catch` style
+
 
 function* doSearch(viewContext) {
   // returns a Maybe
@@ -94,14 +101,37 @@ function* doSearch(viewContext) {
   var platformName = yield platformNameM; // attempt to load list of shows for platform
 
   try {
-    // throws (Either:Left) if it fails
+    // since `doSearch(..)` is run by `doEither(..)`,
+    // an Either:Left (if the API call fails) will
+    // throw here
     let listOfShows = yield IO.doEither(apiGet, `platform/${encodeURIComponent(platformName)}`);
     return IO.do(displayShows, listOfShows);
   } catch (err) {
     reportError(err);
     return noShowsAvailable;
   }
-}
+} // // ---------------------------------------------------
+// // VERSION 2 (`doSearchAlt(..)` invoked with `do(..)`)
+// // no automatic throwing of Either:Left, so uses
+// // fold(..) for success/error handling
+// function *doSearchAlt(viewContext) {
+// 	// returns a Maybe
+// 	var platformNameM = yield IO.do(getPlatformName);
+// 	// short-circuit out if no platform is selected
+// 	var platformName = yield platformNameM;
+// 	var resE = yield IO.do(
+// 		apiGet,
+// 		`platform/${encodeURIComponent(platformName)}`
+// 	);
+// 	return resE.fold(
+// 		err => {
+// 			reportError(err);
+// 			return noShowsAvailable;
+// 		},
+// 		listOfShows => IO.do(displayShows,listOfShows)
+// 	);
+// }
+
 
 function* displayShows({
   searchResultsEl
@@ -119,7 +149,8 @@ function* displayShows({
     yield appendElement(docFragment, el);
   }
 
-  yield appendElement(searchResultsEl, docFragment); // // VERSION 2 (more canonical expression-chain syntax):
+  yield appendElement(searchResultsEl, docFragment); // // ---------------------------------------------------
+  // // VERSION 2 (more canonical expression-chain syntax):
   // yield (
   // 	setProp("innerHTML","",searchResultsEl)
   // 	.chain(() => (

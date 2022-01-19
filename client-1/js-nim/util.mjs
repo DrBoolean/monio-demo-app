@@ -40,15 +40,16 @@ function disableElement(el) {
 
 function enableElement(el) {
   return IO(() => el.disabled = false);
-}
+} // returns an Either
+
 
 function* apiGet(env, endpoint) {
-  let apiEndpointURL = `/api/${endpoint}`;
+  var apiEndpointURL = `/api/${endpoint}`;
 
   try {
     let res = yield fetch(apiEndpointURL);
     let json = Maybe.from(yield ifReturned(iif(res && res.ok, $ => [iReturn(res.json())])));
-    return json.fold(() => Either.Left(`API call failed: ${apiEndpointURL}`), identity);
+    return json.fold(() => Either.Left(`API call failed: ${apiEndpointURL}`), res => Either.Right(res));
   } catch (err) {
     return Either.Left(`API call failed: ${apiEndpointURL}`);
   }
