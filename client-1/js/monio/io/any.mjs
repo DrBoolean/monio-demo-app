@@ -1,5 +1,0 @@
-/*! Monio: any.mjs
-    v0.34.0-pre (c) 2022 Kyle Simpson
-    MIT License: http://getify.mit-license.org
-*/
-import{isFunction,isPromise,continuation,runSignal,isRunSignal,trampoline}from"../lib/util.mjs";import IO from"./io.mjs";const BRAND={};export default Object.assign(AnyIO,{of:of,is:is,fromIO:fromIO,empty:empty});function AnyIO(n){var i=IO(n),r={map:function map(n){return AnyIO((r=>i.map(n).run(runSignal(r))))},chain:chain,flatMap:chain,bind:chain,concat:function concat(n){return AnyIO((r=>IO((n=>i.run(runSignal(n)))).map((i=>i||n.run(runSignal(r)))).run(runSignal(r))))},run:function run(n){return i.run(n)},_inspect:function _inspect(){var n=i._inspect().match(/^IO\((.*)\)$/)[1];return`${r[Symbol.toStringTag]}(${n})`},_is:function _is(n){return!(n!==BRAND&&!i._is(n))},[Symbol.toStringTag]:"AnyIO"};return r;function chain(n){return AnyIO((r=>i.chain(n).run(runSignal(r))))}}function of(n){return AnyIO((()=>n))}function is(n){return!!(n&&isFunction(n._is)&&n._is(BRAND))}function fromIO(n){return AnyIO((i=>n.run(runSignal(i))))}function empty(){return AnyIO((()=>!1))}
