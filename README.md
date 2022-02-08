@@ -29,14 +29,15 @@ If you modify any of the client files in `/js/`, and want to see those changes r
 To run the tool:
 
 ```cmd
-scripts/build-client
+npm run build
 ```
+
 **Note:** This tool is also automatically run whenever you start the server with `npm start`.
 
 That defaults to rebuilding the client code under the `/client-1/` directory. However, you can also tell the tool to run against a different client directory, like this:
 
 ```cmd
-scripts/build-client --client=/path/to/another/client
+npm run build -- --client=/path/to/another/client
 ```
 
 The build tool will assume to build ESM files from the specified client directory's `/js/` sub-directory to a `/js-nim/` sub-directory (which must already exist).

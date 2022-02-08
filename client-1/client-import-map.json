@@ -13,7 +13,6 @@
 		"monio/io/x": "/js-nim/monio/io/iox.mjs",
 		"monio/io/any": "/js-nim/monio/io/any.mjs",
 		"monio/io/all": "/js-nim/monio/io/all.mjs",
-		"monio/io/event-stream": "/js-nim/monio/io/event-stream.mjs",
 		"monio/io/helpers": "/js-nim/monio/io/helpers.mjs",
 		"monio/iox/helpers": "/js-nim/monio/io/x-helpers.mjs",
 		"monio/io/x/helpers": "/js-nim/monio/io/x-helpers.mjs",
