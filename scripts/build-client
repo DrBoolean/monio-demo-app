@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+"use strict";
+
 var fs = require("fs");
 var path = require("path");
 var util = require("util");
@@ -36,6 +38,10 @@ const CLIENT_JS_NIM_DIR = path.join(CLIENT_DIR,"js-nim");
 	}
 
 	try {
+		if (!safeMkdir(CLIENT_JS_NIM_DIR)) {
+			throw new Error(`Target directory (${CLIENT_JS_NIM_DIR}) does not exist and could not be created.`);
+		}
+
 		// run import-remap CLI on the client's /js tree
 		// to remap the dependencies
 		await execFileAsync(
@@ -54,7 +60,7 @@ const CLIENT_JS_NIM_DIR = path.join(CLIENT_DIR,"js-nim");
 		// monio's dist/esm/ to client's js/monio/ and js-nim/monio/
 		copyExternalDependencies();
 
-		console.log(`Client build complete (${CLIENT_JS_NIM_DIR})`);
+		console.log(`Client build complete (${CLIENT_DIR})`);
 	}
 	catch (err) {
 		showError(err);

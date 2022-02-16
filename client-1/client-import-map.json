@@ -1,7 +1,5 @@
 {
 	"imports": {
-		"app-util": "/js-nim/util.mjs",
-
 		"monio": "/js-nim/monio/index.mjs",
 		"monio/just": "/js-nim/monio/just.mjs",
 		"monio/nothing": "/js-nim/monio/nothing.mjs",
@@ -16,6 +14,8 @@
 		"monio/io/helpers": "/js-nim/monio/io/helpers.mjs",
 		"monio/iox/helpers": "/js-nim/monio/io/x-helpers.mjs",
 		"monio/io/x/helpers": "/js-nim/monio/io/x-helpers.mjs",
-		"monio/util": "/js-nim/monio/lib/util.mjs"
+		"monio/util": "/js-nim/monio/lib/util.mjs",
+
+		"app-util": "/js-nim/util.mjs"
 	}
 }
